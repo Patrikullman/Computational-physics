@@ -13,8 +13,10 @@
  * @kappa - Spring constant
  * @size_of_u - the size of the position, acceleration and mass array
  */
- #include <stdio.h>
- #include <stdlib.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
 void calc_acc(double *a, double *u, double *m, double kappa, int size_of_u)
 {
     /* Declaration of variables */
@@ -44,13 +46,21 @@ void velocity_verlet(int n_timesteps, int n_particles, double *v, double *q_1,
 		     double *q_2, double *q_3, double dt, double *m,
 		     double kappa)
 {
-    double q[n_particles]; //skapar en array med 3 platser
+    double q[n_particles];
     double a[n_particles];
     q[0] = q_1[0];
     q[1] = q_2[0];
     q[2] = q_3[0];
+
+    FILE *fp = fopen("velocity_array.csv", "w");
+    
+    
+    
+
     calc_acc(a, q, m, kappa, n_particles);
     for (int i = 1; i < n_timesteps + 1; i++) {
+        fprintf(fp, "%f,%f,%f\n", v[0], v[1], v[2]);  //trying to add positions and time to a file so we can plot.  we get q[i] from velocity verlet. 
+    
         /* v(t+dt/2) */
         for (int j = 0; j < n_particles; j++) {
             v[j] += dt * 0.5 * a[j];
@@ -58,8 +68,7 @@ void velocity_verlet(int n_timesteps, int n_particles, double *v, double *q_1,
         
         /* q(t+dt) */
         for (int j = 0; j < n_particles; j++) {
-            q[j] += dt * v[j];  //se gitlab sida 2 av readme, där visar dem ekvationerna fr velocity verlet och hur vi får dem. 
-            //printf("%f",q[j]);
+            q[j] += dt * v[j];
         }
         
         /* a(t+dt) */
@@ -74,111 +83,118 @@ void velocity_verlet(int n_timesteps, int n_particles, double *v, double *q_1,
         q_1[i] = q[0];
         q_2[i] = q[1];
         q_3[i] = q[2];
-        printf("q_1[i]: %f,%f,%f\n",q_1[i],q_2[i], q_3[i]);
-//de vi får ut här är q_1, q_2 och q_3 och vi har ju en nested loop som går 100 varv (100 timesteps) och varje varv så sparas ju positionerna i q[] arrayn,  där q[q_1, q_2, q_3]. 
-    }    
-}
 
-
-int main() {
-
-double* q;
-double* q_1;   //here im trying to allocate three arrays for q1, q2 q3,   the positions of the three atoms. the size of q_n should be timesteps+1
-double* q_2;   
-double* q_3;
-double* v;
-int n_particles = 3;
-double kappa= 1;
-q = (double*)malloc(1000 * sizeof(int));
-q_1 = (double*)malloc(1000 * sizeof(int));  //imorgon ska jag testa att använda C2 2D-array för att skapa matris för q1q2q3 
-q_2 = (double*)malloc(1000 * sizeof(int)); 
-q_3 = (double*)malloc(1000 * sizeof(int));
-q_1[0] = 0.01;//initial positions 
-q_2[0] = 0.005;
-q_3[0] = -0.005;
-double m[3] = {6.0, 6.0, 6.0}; //masses of the three particles size of n_particles, så size  = 3
-v = (double*)calloc(n_particles,n_particles * sizeof(int)); //empty allocated array, size n_particles,  så size är 3
-
-
-velocity_verlet(500,3,v,q_1,q_2,q_3,25, m, 0.0001);  //im wondering what the optimal parameters are... do we need to convert ? 
-
-
-   FILE *fp = fopen("velocityverlet.csv", "w");
-    for(int i = 0; i < 500; ++i){
-	    fprintf(fp, "%f,%f,%f\n", q_1[i], q_2[i], q_3[i]);  //trying to add positions and time to a file so we can plot.  we get q[i] from velocity verlet. 
+    
     }
     fclose(fp);
+}
+
+int main()
+{
+    int n_timesteps = 1000; 
+    int n_particles = 3;
+    double dt = 0.25/n_timesteps;
+    double kappa = 1000/16.0218; // kappa expressed in terms of asu 
+    int row_size = n_timesteps; 
+    int column_size = n_particles+2; // add 2 because of the walls
+
+
+    double* q_1 = (double*)malloc(n_timesteps * sizeof(double));  
+    double* q_2 = (double*)malloc(n_timesteps * sizeof(double)); 
+    double* q_3 = (double*)malloc(n_timesteps * sizeof(double));
+    q_1[0] = 0.01;//initial positions 
+    q_2[0] = 0.005;
+    q_3[0] = -0.005;
+
+    
+    double* v = (double*)malloc(n_particles * sizeof(double));
+    for (int i = 0; i < 3; ++i){
+        v[i] = 0.;
+    }
+
+   
+    double** velocity_array = (double**)malloc(row_size * sizeof(double*));
+    for (int i = 0; i < row_size; i++)
+        velocity_array[i] = (double*)malloc(n_particles * sizeof(double)); 
+    
     
 
 
+    double m[3] = {12.0/9649, 12.0/9649, 12.0/9649}; // mass in asu
+
+    velocity_verlet(n_timesteps, n_particles, v, q_1, q_2, q_3, dt, m, kappa);
+    
+    
+
+    FILE *fp = fopen("velocityverlet.csv", "w");
+    for(int i = 0; i < n_timesteps; ++i){
+        fprintf(fp, "%f,%f,%f\n", q_1[i], q_2[i], q_3[i]);  //trying to add positions and time to a file so we can plot.  we get q[i] from velocity verlet. 
+    }
+    fclose(fp);
+
+    // Following code are for energy calculations
+    double** position_array = (double**)malloc(row_size * sizeof(double*));
+    for (int i = 0; i < row_size; i++)
+        position_array[i] = (double*)malloc(column_size * sizeof(double));
 
 
+    for(int i = 0; i < n_timesteps; ++i){
+            position_array[i][0] = 0;
+            position_array[i][1] = q_1[i];
+            position_array[i][2] = q_2[i];
+            position_array[i][3] = q_3[i];
+            position_array[i][4] = 0;
+    }
 
+    
 
+    double* Ek = (double*)malloc(n_timesteps * sizeof(double));
+    double* Ep = (double*)malloc(n_timesteps * sizeof(double));
+    double* Etot = (double*)malloc(n_timesteps * sizeof(double));
 
+    FILE *fp2 = fopen("Epot.csv", "w");
+    for (int i = 0; i < n_timesteps; ++i){
 
+        
+        for (int j = 0; j <= 3; ++j){
+            Ep[i] += kappa/2 * (position_array[i][j+1]-position_array[i][j]);
+        }
+        fprintf(fp2, "%f\n", Ep[i]);
+        Etot[i] = Ek[i] + Ep[i];
+    }
 
-// how can we plot the energies? potential, kinetic and total energy.
-//Total energy is the hamiltonian,  it should be a straight line. 
+    fclose(fp2);
 
-// H = sum(m*v[i])²+sum(kappa/2*(q[i+1]-q[i])
-//double E_pot;
-//for(int i=0;i<3;i++){
-//	E_pot = 0.0001/2*(q_2[i]-q_1[i]);
-//	printf("%f\n",E_pot);
-//}
-
-
-
-
-
-return 0;
-
-
-
-
-
-
-
-
-
-
-
+    return 0;
 }
+
+
 
 
 
 
 
 /*
+int row_size = n_timesteps, column_size = 5; // r rows, c columns
+double dist = 0;
+
+double** position_array = (double**)malloc(row_size * sizeof(double*));
+for (i = 0; i < row_size; i++)
+    position_array[i] = (double*)malloc(column_size * sizeof(double));
 
 
-//double q_1[1] = {0.2};
-//double q_2[1] = {0.1};
-//double q_3[1] = {0.3};
-//double q_1 = 0.1;
-//double q_2 = 0.3;
-//double q_3 = 0.2;
+for (int i = 0; i < n_timesteps; ++i){
+    double Ek[i] = 0;
+    double Ep[i] = 0;
+    double Etot[i] = 0;
 
-
-void arange(double *array, double start, int len_t, double dt){ //the function arange constructs a time array,  i took it from E1code1.c 
-    for(int i = 0; i < len_t; i++){
-	array[i] = start + i*dt;
+    for (int j = 1; j <= 3; ++j){
+        Ek[i] += m[j]*v[j]*v[j]/2;
     }
-} 
+    for (int j = 0; j <= 3; ++j){
+        Ep[i] += kappa/2 * (position_array[i][j+1]-position_array[i][j]);
+    }
+    Etot[i] = Ek[i] + Ep[i];
 
-
-
+}
 */
-
-
-
-
-
-
-
-
-
-
-
-
