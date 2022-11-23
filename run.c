@@ -1,15 +1,14 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "lattice.h"
-#include "potential.h"
-#include "lattice.h"
-#include "potential.h"
-
-// these allows us to use gsl functions. 
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
-#include <time.h>
+#include "lattice.h"
+#include "potential.h"
+#include "gsl_func.h"
+#include "tools.h"
+
+
 
 int
 run(
@@ -17,103 +16,160 @@ run(
     char *argv[]
    )
 {
-/////using init_fcc to create the fcc lattice.
+    
+    /* This first part of this program was used for task 1 */
 
-#define ROWS 256
-#define COLS 3
+    int N = 4;
+    double a0_arr[10] = {3.95, 3.97, 3.98, 3.99, 4, 4.01, 4.03, 4.05, 4.08, 4.09}; // potential lattice constants
 
-	double position_array[ROWS][COLS]; //defining a 2D array to fill with the fcc lattice. 
-	
-	for(int i=0; i<ROWS; i++){
-		for(int j=0; j<COLS;j++){
-		position_array[i][j] = 0;
-	}
+    
+    double position_array[4*N*N*N][3]; // initializing an array with coordinates/positions of the atoms
+    int natoms = sizeof(position_array) / (3 * sizeof(double)); // number of atoms 
+    
+    FILE *fp = fopen("lattice_para_vs_Ep.csv", "w");
+    for(int i = 0; i < 10; ++i){
+        
+        init_fcc(position_array, N, a0_arr[i]); 
+        double E_pot = get_energy_AL(position_array, N * a0_arr[i], natoms) / (N*N*N); 
+        fprintf(fp, "%f, %f\n", a0_arr[i], E_pot); 
+    }
+    fclose(fp);
 
-}
-int N = 4; //number of unit cells
-double a0 = 4; //lattice parameter
-init_fcc(position_array, N, a0); //Function takes a matrix of size [4*N*N*N][3] as input and stores a fcc lattice in it. 
-
-for(int i=0; i<ROWS; i++){
-	for(int j=0; j<COLS;j++){
-		printf("position_array %f\n", position_array[i][j]);  //just printing out the fcc lattice to see.
-		}
-	}
-/////Below we are calculating E_pot for various lattice parameters and plotting them in python.
-double E_pot;
-double a0_array[] = {3.95,3.96,3.97,3.98,3.99,4.0,4.1,4.2}; //unit Ångström.
-double natoms = 256;
-    for (int i = 0; i<8;i++){     //Calculate the lattice and energy for many structures, i.e varying a0 so we can easily plot it and make a fit in python. 
-            init_fcc(position_array, N, a0_array[i]); 
-            E_pot = get_energy_AL(position_array, N * a0_array[i], natoms)/64; //divide by 64 because we need to divide by N*N*N = 4*4*4 = 64
-    	    FILE *FP;
-            FP = fopen("lattice_energies.csv", "a"); //Once we get the a0 and corresponding E_pot's  we write it to a file and plot E_pot as a function of a0_array in python
-            fprintf(FP, "%f,%f\n", a0_array[i],E_pot); 
-          }
-          
-
-//////now, we want to introduce small deviations in the lattice. 
+    FILE *fp2 = fopen("positions.csv", "w");
+    for(int i = 0; i < 256; ++i){
+        //printf("array: %f, %f, %f\n", position_array[i][0], position_array[i][1], position_array[i][2]);
+        fprintf(fp2, "%f, %f, %f\n", position_array[i][0], position_array[i][1], position_array[i][2]);
+    }
+    fclose(fp2);
 
 
-const gsl_rng_type * T;
+
+    /* Now follows some code used for task 2 */
+
+    double m = 26*0.103625e-3; // Mass of Al in asu
+    double a0 = 4.0303522; // The lattice constant
+    int n_timesteps = 1000;
+    double dt = 0.00001;
+    double velocity_array[4*N*N*N][3]; 
+    
+    /* Initialize the velocity array with all velocities equal to 0 */
+    for(int i = 0; i < 2*N; ++i){
+        for(int j = 0; j < 2*N; ++j){
+            for(int k = 0; k < N; ++k){
+                velocity_array[i * N * 2 * N + j *N + k][0] = 0;
+                velocity_array[i * N * 2 * N + j *N + k][1] = 0;
+                velocity_array[i * N * 2 * N + j *N + k][2] = 0;
+            }
+        }
+    }
+
+    double pos_array[4*N*N*N][3]; // Array with positions of each atom in ONE lattice
+    double pos_evolution[n_timesteps][4*N*N*N][3]; // Arrar with the positions of the atoms in the lattice for each time step
+    double force[4*N*N*N][3]; // Array with the forces between the atoms in the lattice
+    init_fcc(pos_array, N, a0); // Initialize the lattice
+    
+    //printf("pos init:%f\n", pos_array[250][1]);
+
+    const gsl_rng_type * T;
     gsl_rng * r;
 
-    int i, n = 256;
     gsl_rng_env_setup();
 
     T = gsl_rng_default;
-    r = gsl_rng_alloc(T); 
+    r = gsl_rng_alloc(T);
 
-    // typically the seed is set to the current time.
-    //time_t seed = time(NULL);
     int seed = 42;
     gsl_rng_set(r, seed);
-	double* ptr; //initializing array ptr to store our random uniform numbers. 
-    for (i = 0; i < ROWS; i++){   //for loop for our uniform numbers
-	double u = gsl_rng_uniform(r); //uniform numbers are stored in variable u
-	ptr = (double*)malloc(1000 * sizeof(double)); //dynamically allocating an array, to store all u values.
-	ptr[i] = u*(0.26); //saving all u values in the ptr array. (this is a uniform array between 0 and 0.26 that i can use to deviate my atom positions.)
-	for (int i = 0;i<ROWS;i++){
-		for(int j=0;j<COLS;j++){ //here im looping through each element, giving it 50% chance to the position getting either + och - 6.5% deviation. 
-			if (ptr[i] <= 0.26/2) {  //this if-statement creates a 50% chance.  (0.26 comes from 6.5% of a0=4 as lattice parameter)
-				position_array[i][j] = position_array[i][j] + ptr[i]; 
-				printf("p %f\n",position_array[i][j]);
-				}
-			else {
-			position_array[i][j] = position_array[i][j] - ptr[i];
-}
-}
-}
-	//position_array[i][0] = position_array[i][0] + ptr[i];  //just introducing a deviation +- 0.26 in the original positions. 
-	//position_array[i][1] = position_array[i][1] - ptr[i];  //this works to give diviations in the lattice but its not completely random. 
-	//position_array[i][2] = position_array[i][2] + ptr[i];
-	//printf(" %f\n %f\n %f\n",position_array[i][0],position_array[i][1],position_array[i][2]);
+
+    for(int i = 0; i < 2*N; ++i){
+        for(int j = 0; j < 2*N; ++j){
+            for(int k = 0; k < N; ++k){
+                pos_array[i * N * 2 * N + j *N + k][0] += 2*(gsl_rng_uniform(r)-0.5)*a0*0.065;
+                pos_array[i * N * 2 * N + j *N + k][1] += 2*(gsl_rng_uniform(r)-0.5)*a0*0.065;
+                pos_array[i * N * 2 * N + j *N + k][2] += 2*(gsl_rng_uniform(r)-0.5)*a0*0.065;
+            }
+        }
+    }
+    //printf("pos dist:%f\n", pos_array[250][1]);
+
+    for(int i = 0; i < n_timesteps; ++i){
+        for(int j = 0; j < 2*N; ++j){
+            for(int k = 0; k < 2*N; ++k){
+                for(int l = 0; l < N; ++l){
+
+                    pos_evolution[i][j * N * 2 * N + k * N + l][0] = pos_array[j * N * 2 * N + k * N + l][0];
+                    pos_evolution[i][j * N * 2 * N + k * N + l][1] = pos_array[j * N * 2 * N + k * N + l][1];
+                    pos_evolution[i][j * N * 2 * N + k * N + l][2] = pos_array[j * N * 2 * N + k * N + l][2];
+                    //printf("pos ev:%f\n", pos_evolution[i][j * N * 2 * N + k * N + l][0]);
+                }
+            }
+        }
+    }
+
+    double *Ek = (double*)malloc(sizeof(double)*n_timesteps);
+    velocity_verlet(n_timesteps, 4*N*N*N, velocity_array, pos_array, pos_evolution, dt, m, force, N*a0, Ek);
+    printf("Ek:%f\n", Ek[250]);
+
+    //printf("pos:%f\n", pos_array[250][1]);
+
+    double *Ep = (double*)malloc(sizeof(double)*n_timesteps);
+    //double *Ek = (double*)malloc(sizeof(double)*n_timesteps);
+    //double Ek[n_timesteps];
+    double *Etot = (double*)malloc(sizeof(double)*n_timesteps);
+    double *times = (double*)malloc(sizeof(double)*n_timesteps);
+
+    for(int i = 0; i < n_timesteps; ++i){
+       // printf("pos_ev:%f\n", pos_evolution[i][7][0]);
+    }
+
+    for(int i = 0; i < n_timesteps; ++i){
+        //printf("pos_ev:%f\n", pos_evolution[i][7][0]);
+        Ep[i] = get_energy_AL(pos_evolution[i], N*a0, 4*N*N*N)/(N*N*N);
+        //printf("Ep:%f\n", Ep[i]);
+        Ek[i] = get_virial_AL(pos_evolution[i], N*a0, 4*N*N*N)/(N*N*N);
+        Etot[i] = Ep[i] + Ek[i];
+        times[i] = i*dt;
+    }
+    
+    write_to_file("energy_arrays.csv", times, Ep, Ek, Etot, n_timesteps);
+
+    //get_forces_AL(force, pos_array, a0*N, 256);
+    //printf("force in main:%f\n",force[250][1]);
+
+    /*
+    double kB = 1.80649e-23;
+    double temp = 0;
+    for(int i = 0; i < n_timesteps; ++i){
+        temp += (2*Ek[i]*1.60218e-19) / (3*kB);
+    }
+    temp = temp / n_timesteps;
+    printf("temp:%f\n", temp);
+    */
+
+    double kB = 1.80649e-23;
+    double temp_inst = 0;
+    double temp = 0;
+    for(int i = 0; i < n_timesteps; ++i){
+        temp_inst += (2*Ek[i]*1.60218e-19) / (3 * kB * (4*N*N*N) );
+    }
+    temp = temp_inst / n_timesteps;
+    printf("temp:%f\n", temp);
+
+    /*    
+    int T_eq = 500 + 273; // Temp at which we wish to equilibrate
+    double alpha_T[n_timesteps];
+    double tau_T = 100 * dt;
+    double temp_inst2 = 0;
+
+    for(int i = 0; i < n_timesteps; ++i){
+        temp_inst2 += (2*Ek[i]*1.60218e-19) / (3 * kB * (4*N*N*N) );
+        alpha_T[i] = 1 + (((2*dt) / tau_T) * ((T_eq - temp_inst2) / temp_inst2));
 
     }
-    gsl_rng_free (r);
-
-double pos_x[ROWS][COLS]; 
-double pos_y[ROWS][COLS];
-double pos_z[ROWS][COLS];
-for(int i = 0; i<ROWS;i++){
-	pos_x[i][0] = position_array[i][0];
-	pos_y[i][1] = position_array[i][1];
-	pos_z[i][2] = position_array[i][2];
-}
-
-for(int i=0; i<ROWS; i++){
-	for(int j=0; j<COLS;j++){
-	//printf("%f\n", array[i][j]);
-	FILE *fp;
-	fp = fopen("lattice_positions.csv", "a");  // writing positions of the fcc atoms to a file.
-	fprintf(fp, "%f,%f,%f\n", pos_x[i][0],pos_y[i][1],pos_z[i][2] ); 
-	}
-	}
-
-
-
-
-
+    */
+    
+    
+    
 
     return 0;
 }
