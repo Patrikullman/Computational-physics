@@ -151,7 +151,7 @@ double cell_length, double E_kin[n_timesteps])
             }
         }
 
-        int T_eq = 200 + 273; // Temp at which we wish to equilibrate
+        int T_eq = 500 + 273; // Temp at which we wish to equilibrate
         double kB = 1.380649e-23;
         double alpha_T[n_timesteps];
         double tau_T = 100 * dt;
@@ -177,10 +177,10 @@ double cell_length, double E_kin[n_timesteps])
         
         //FILE *fp2 = fopen("inst_pres.csv", "w");
         //FILE *fp3 = fopen("a0_evolution.csv", "w");
-        int P_eq = 100000 / 1.60218e+11; // Pressure in asu at which we wish to equilibrate 
+        int P_eq = 1/1.60218e+6; //100000 / 1.60218e+11; // Pressure in asu at which we wish to equilibrate 
         double alpha_P[n_timesteps];
         double tau_P = 100*dt;
-        double kappa_T = 0.04e+9 / 1.60218e+11; //0.04GPa^-1
+        double kappa_T = 2.32; //0.04e+9 / 1.60218e+11; //0.04GPa^-1
         double P_inst = 0;
 
         P_inst = ( E_kin[i] + 3 * get_virial_AL(position, cell_length, n_particles) ) / 

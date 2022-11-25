@@ -46,7 +46,7 @@ run(
     double m = 26*0.103625e-3; // Mass of Al in asu
     double a0 = 4.0303522; // The lattice constant
     int n_timesteps = 1000;
-    double dt = 0.001;
+    double dt = 0.01;
     double velocity_array[4*N*N*N][3]; 
     
     /* Initialize the velocity array with all velocities equal to 0 */
@@ -107,17 +107,17 @@ run(
         }
     }
 
-    double *Ek = (double*)malloc(sizeof(double)*n_timesteps);
+    double *Ek = (double*)malloc(sizeof(double)*(n_timesteps+ 1));
     velocity_verlet(n_timesteps, 4*N*N*N, velocity_array, pos_array, pos_evolution, dt, m, force, N*a0, Ek);
     //printf("Ek:%f\n", Ek[250]);
 
     //printf("pos:%f\n", pos_array[250][1]);
 
-    double *Ep = (double*)malloc(sizeof(double)*n_timesteps);
+    double *Ep = (double*)malloc(sizeof(double)*(n_timesteps+1));
     //double *Ek = (double*)malloc(sizeof(double)*n_timesteps);
     //double Ek[n_timesteps];
-    double *Etot = (double*)malloc(sizeof(double)*n_timesteps);
-    double *times = (double*)malloc(sizeof(double)*n_timesteps);
+    double *Etot = (double*)malloc(sizeof(double)*(n_timesteps+1));
+    double *times = (double*)malloc(sizeof(double)*(n_timesteps+1));
 
     for(int i = 0; i < n_timesteps; ++i){
        // printf("pos_ev:%f\n", pos_evolution[i][7][0]);
@@ -152,12 +152,12 @@ run(
 
     /* Now follows some code used for equilibrating the system at specified temp and pressure */
     
-    double *Ek_scaled = (double*)malloc(sizeof(double)*n_timesteps);
+    double *Ek_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
     velocity_verlet_scaled(n_timesteps, 4*N*N*N, velocity_array, pos_array, pos_evolution, dt, m, force, N*a0, Ek_scaled);
     
-    double *Ep_scaled = (double*)malloc(sizeof(double)*n_timesteps);
-    double *Etot_scaled = (double*)malloc(sizeof(double)*n_timesteps);
-    double *times_scaled = (double*)malloc(sizeof(double)*n_timesteps);
+    double *Ep_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
+    double *Etot_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
+    double *times_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
 
     for(int i = 0; i < n_timesteps; ++i){
        
