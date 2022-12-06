@@ -85,7 +85,7 @@ void write_to_file(char *fname, double *times,
 
 void velocity_verlet_scaled(int n_timesteps, int n_particles, double v[][3], double position[][3],
 double position_evolution[][n_particles][3], double dt, double m, double force[][3], 
-double cell_length, double E_kin[n_timesteps])
+double cell_length, double E_kin[n_timesteps], double temp_inst_verlet_scaled[n_timesteps])
 {
     FILE *fp = fopen("inst_temp.csv", "w");
     FILE *fp2 = fopen("inst_pres.csv", "w");
@@ -161,6 +161,7 @@ double cell_length, double E_kin[n_timesteps])
             
             temp_inst2 = (2*E_kin[i]*1.60218e-19) / (3 * kB * (4*N*N*N) );
             alpha_T[i] = 1 + (((2*dt) / tau_T) * ((T_eq - temp_inst2) / temp_inst2));
+            temp_inst_verlet_scaled[i] = temp_inst2;
 
             /* Scale the velocity and turn off scaling at time step 600 at which equilibrium is considered to be reached*/
             if(i < 600){
@@ -222,6 +223,7 @@ double cell_length, double E_kin[n_timesteps])
             
             temp_inst2 = (2*E_kin[i]*1.60218e-19) / (3 * kB * (4*N*N*N) );
             alpha_T[i] = 1 + (((2*dt) / tau_T) * ((T_eq - temp_inst2) / temp_inst2));
+            temp_inst_verlet_scaled[i] = temp_inst2;
 
             /* Scale the velocity and turn off scaling at time step 600 at which equilibrium is considered to be reached*/
             if(i < 600){
@@ -270,10 +272,12 @@ double cell_length, double E_kin[n_timesteps])
             fprintf(fp2, "%f, %f\n", P_inst, i*dt);
             fprintf(fp3, "%f, %f\n", cell_length, i*dt);
             cell_length = cbrt(alpha_P[i]) * cell_length;
+              
             //printf("alpha_P: %f\n", alpha_P[i]);
             //printf("a0: %f\n", cell_length / N);
         }
-        
+
+         
 
     }
     fclose(fp);
@@ -318,4 +322,14 @@ double cell_length, double E_kin[n_timesteps])
     fclose(fp3);
     fclose(fp2);
     */
+}
+
+
+double distance(double point1[3], double point2[3]){
+    double diff_x = point1[0]-point2[0];
+    double diff_y = point1[1]-point2[1];
+    double diff_z = point1[2]-point2[2];
+
+    double dist = sqrt(diff_x*diff_x + diff_y*diff_y + diff_z*diff_z);
+    return dist;
 }

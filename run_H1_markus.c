@@ -153,13 +153,35 @@ run(
     /* Now follows some code used for equilibrating the system at specified temp and pressure */
     
     double *Ek_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
-    velocity_verlet_scaled(n_timesteps, 4*N*N*N, velocity_array, pos_array, pos_evolution, dt, m, force, N*a0, Ek_scaled);
+   // double *C_V = (double*)malloc(n_timesteps * sizeof(double));
+    double *temp_inst_verlet_scaled = (double*)malloc(n_timesteps * sizeof(double));
+
+    
+    velocity_verlet_scaled(n_timesteps, 4*N*N*N, velocity_array, pos_array, pos_evolution, dt, m, force, N*a0, Ek_scaled, temp_inst_verlet_scaled);
     
     double *Ep_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
     double *Etot_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
     double *times_scaled = (double*)malloc(sizeof(double)*(n_timesteps+1));
+    double Ek_mean = 0;
+    double Ek_vari = 0;
+
+    for(int i = 600; i < n_timesteps; ++i){
+        Ek_mean += Ek_scaled[i];
+        // Ek_vari += (Ek_scaled[i]*Ek_scaled[i]);
+    }
+    Ek_mean = Ek_mean / 400;
+
+    double* EK_centered = (double*)malloc(400*sizeof(double));
+    for(int i = 600; i < n_timesteps; ++i){
+        EK_centered[i-600] = Ek_scaled[i-600]-Ek_mean;
+    }
+    for(int i = 600; i < n_timesteps; ++i){
+        Ek_vari += EK_centered[i-600]*EK_centered[i-600];
+    }
+    Ek_vari =  Ek_vari/400;
 
     FILE *fp4 = fopen("particle_evol_x.csv", "w");
+    FILE *fp5 = fopen("heat_capa.csv", "w");
     for(int i = 0; i < n_timesteps; ++i){
        
         Ep_scaled[i] = get_energy_AL(pos_evolution[i], N*a0, 4*N*N*N);
@@ -167,8 +189,19 @@ run(
         times_scaled[i] = i*dt;
         fprintf(fp4, "%f,%f,%f,%f,%f\n", times[i], pos_evolution[i][0][0], pos_evolution[i][101][0], 
         pos_evolution[i][150][0], pos_evolution[i][199][0]);
+
+       
+        
+        
     }
+    
     fclose(fp4);
+    fclose(fp5);
+    double kBeV = 8.617e-5;
+    double C_V = (3*(4*N*N*N)*kBeV / 2) /
+        (1 - (2 / (3*(4*N*N*N)*kBeV*kBeV*temp_inst_verlet_scaled[n_timesteps-1]*temp_inst_verlet_scaled[n_timesteps-1])) * (Ek_vari));
+
+    printf("Ek vari: %0.30f, CV: %0.30f\n", Ek_vari, C_V);
 
     double temp_inst_scaled = 0; // The instantanous temperature
     double temp_scaled = 0; // The final temperature
@@ -179,8 +212,28 @@ run(
     }
     temp_scaled = temp_inst_scaled / n_timesteps;
     printf("T scaled: %f\n", temp_scaled);
-    printf("x0: %f, x1: %f, x2: %f, x3: %f", pos_evolution[0][0][0], pos_evolution[0][101][0], 
-        pos_evolution[0][150][0], pos_evolution[0][199][0]);
+    //printf("x0: %f, x1: %f, x2: %f, x3: %f", pos_evolution[0][0][0], pos_evolution[0][101][0], 
+       // pos_evolution[0][150][0], pos_evolution[0][199][0]);
+
+    double** distance_array = (double**)malloc(256 * sizeof(double*));
+    for (int i = 0; i < 256; i++){
+        distance_array[i] = (double*)malloc(256 * sizeof(double));
+    }
+
+    FILE *fp6 = fopen("dist_between_points.csv", "w");
+    for(int i = 0; i < 256; ++i){
+        for(int j = 0; j < 256; ++j){
+            //if(j = i){
+              //distance_array[i][j] = 0;
+            //}
+            //else{
+                distance_array[i][j] = distance(pos_evolution[n_timesteps-1][i], pos_evolution[n_timesteps-1][j]);
+            //}
+            fprintf(fp6, "%d,%f\n", i, distance_array[i][j]);
+            //printf("dist: %f\n", distance_array[i][j]);
+        }
+    }
+    fclose(fp6);
 
     return 0;
 }
