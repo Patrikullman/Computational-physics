@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+#include "tools.h"
 
 int
 run(
@@ -8,10 +11,10 @@ run(
     char *argv[]
    )
 {
-    int n_T = 81;
-    int n_P = 100;
+    int n_T = 100;
+    int n_P = 1000;
     
-    int* T = (int*)malloc(n_T * sizeof(int));
+    double* T = (double*)malloc(n_T * sizeof(double));
     double* P = (double*)malloc(n_P * sizeof(double));
 
     int T_start = 300;
@@ -21,29 +24,27 @@ run(
 
     int P_start = 0.01;
     for(int i = 0; i < n_P; ++i){
-        P[i] = P_start + 0.01*i;
+        P[i] = P_start + 0.001*i;
     }
 
-    //double T[26] = {390, 420, 450, 500, 530, 560, 580, 600, 630, 660, 680, 700, 730, 760, 780, 800, 830, 860, 880, 900, 930, 960, 980, 1000, 1030, 1100}; //kör scriptet och ändra här, mellan 390-->900K
-    //double P[60] = {0.99,0.98,0.96,0.94,0.92,0.90,0.88,0.86,0.84,0.82,0.8,0.78,0.76,0.74,0.72,0.7,0.68,0.66,0.64,0.62,0.60,0.58,0.56,0.54,0.52,0.50,0.48,0.46,0.44,0.42,0.40,0.38,0.36,0.34,0.32,0.30,0.28,0.26,0.024,0.22,0.20,0.18,0.16,0.14,0.12,0.10,0.08,0.06};
     int N = 256;
-    double Ecucu = -436e-3;
-    double Ezizi = -113e-3;
-    double Ecuzi = -294e-3;
+    double Ecucu = -436e-3; // Binding energy Cu-Cu
+    double Ezizi = -113e-3; // Binding energy Zi-Zi
+    double Ecuzi = -294e-3; // Binding energy Cu-Zi
     double E0 = 2*N*(Ecucu + Ezizi + 2*Ecuzi);
     double dE = Ecucu + Ezizi - 2*Ecuzi;
-    double kB = 8.617333e-5;
-    double* F = (double*)malloc(n_P * sizeof(double));
-    double* min_P = (double*)malloc(n_T * sizeof(double));
-    double* E_mf = (double*)malloc(n_T * sizeof(double)); // The mean field energy
+    double kB = 8.617333e-5; // Boltzmann const in eV
+    double* F = (double*)malloc(n_P * sizeof(double)); // Allocate array for free energy values
+    double* min_P = (double*)malloc(n_T * sizeof(double)); // Allocate array for P values corresponding to minimum free energy at specific temp
+    double* E_mf = (double*)malloc(n_T * sizeof(double)); // Allocate array for the mean field energy
     
-    
+    /* Calculate the order param, free energy, and mean field energy at different temps */
     FILE *fp = fopen("f_values.csv", "w");
     FILE *fp2 = fopen("PT_values.csv", "w");
     for(int j = 0; j < n_T; ++j){
         for(int i = 1; i < n_P; ++i){
                 F[i] = E0 - 2*N*P[i]*P[i]*dE - 2*N*kB*T[j]*log(2) + N*kB*T[j]*((1+P[i])*log(1+P[i])+(1-P[i])*log(1-P[i]));
-                fprintf(fp, "%f,%d,%f\n", P[i], T[j], F[i]);
+                fprintf(fp, "%f,%f,%f\n", P[i], T[j], F[i]);
         }
         
         int k = 0;
@@ -54,7 +55,7 @@ run(
         }   
         
         E_mf[j] = E0 - 2*N*min_P[j]*min_P[j]*dE;
-        fprintf(fp2, "%d,%f,%f\n", T[j], min_P[j], E_mf[j]);
+        fprintf(fp2, "%f,%f,%f\n", T[j], min_P[j], E_mf[j]);
     }
 
 
@@ -64,23 +65,554 @@ run(
     free(F);
     free(min_P);
 
-    int* dx = (int*)malloc((n_T-1) * sizeof(int));
-    double* dy = (double*)malloc((n_T-1) * sizeof(double));
-    double* C = (double*)malloc((n_T-1) * sizeof(double));
-    int* T_deri = (int*)malloc((n_T-1) * sizeof(int));
+    /* Calculate heat capacity at different temps */
+    
+    double* dx = (double*)malloc((n_T-1) * sizeof(double)); // Allocate array for delta_x step
+    double* dy = (double*)malloc((n_T-1) * sizeof(double)); // Allocate array for delta_y step
+    double* C = (double*)malloc((n_T-1) * sizeof(double)); // Allocate array for heat capacity
+    double* T_deri = (double*)malloc((n_T-1) * sizeof(double)); // Allocate array for the temps between which the slope is calculated
 
+    /* Set values to T_deri */
     for(int i = 0; i < n_T-1; ++i){
         T_deri[i] = T[i];
     }
 
+    /* Calculate the slopes/derivatives and hence also the heat capacity */
     FILE *fp3 = fopen("heat_capa.csv", "w");
     for(int i = 0; i < n_T-1; ++i){
         dx[i] = T[i] - T[i+1];
         dy[i] = E_mf[i] - E_mf[i+1];
         C[i] = dy[i] / dx[i];
-        fprintf(fp3, "%d,%f\n", T_deri[i], C[i]);
+        fprintf(fp3, "%f,%f\n", T_deri[i], C[i]);
     }
     fclose(fp3);
 
+
+
+    // double a0 = 4.03; // Lattice parameter
+    // int Na = 10; // Number of unit cells
+
+
+
+
+    int no_of_iterations = 1000; // Number of Monte Carlo steps
+    double temp = 500; // Set temperature in kelvin
+
+    double lattice_a[10][10][10]; // The initial Cu atoms
+    double lattice_b[10][10][10]; // The initial Zi atoms
+    double lattice_a_prop[10][10][10];
+    double lattice_b_prop[10][10][10];
+
+
+    // Set initial values 
+    for(int i = 0; i < 10; ++i){
+        for(int j = 0; j < 10; ++j){
+            for(int k = 0; k < 10; ++k){
+                lattice_a[i][j][k] = 0; // Lattice a, originally containing Cu atoms
+                lattice_b[i][j][k] = 1; // Lattice b, originally containing Zi atoms
+                lattice_a_prop[i][j][k] = 0; // A proposed a lattice when atoms has been swaped
+                lattice_b_prop[i][j][k] = 1; // A proposed b lattice when atoms has been swaped
+            }
+        }
+    }
+
+    int Naa = 0; // Number of Cu-Cu bindings 
+    int Nbb = 0; // Number of Zi-Zi bindings
+    int Nab = 0; // Number of Cu-Zi bindings
+
+    /* Loop through the two lattice and calculate an initial energy, with boundary conditions taken into a count */
+    for(int i = 0; i < 10; ++i){
+        for(int j = 0; j < 10; ++j){
+            for(int k = 0; k < 10; ++k){
+                if(lattice_a[i][j][k] == lattice_b[i][j][k]){
+                    if(lattice_a[i][j][k] == 0){
+                        Naa += 1;
+                    }
+                    else{
+                        Nbb += 1;
+                    }
+                }
+                else{
+                    Nab += 1;
+                }
+
+                if(i != 9){
+                    if(lattice_a[i][j][k] == lattice_b[i+1][j][k]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+                else{
+                    if(lattice_a[i][j][k] == lattice_b[0][j][k]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+
+                if(j != 9){
+                    if(lattice_a[i][j][k] == lattice_b[i][j+1][k]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+                else{
+                    if(lattice_a[i][j][k] == lattice_b[i][0][k]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+
+                if(k != 9){
+                    if(lattice_a[i][j][k] == lattice_b[i][j][k+1]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+                else{
+                    if(lattice_a[i][j][k] == lattice_b[i][j][0]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+
+                if(i != 9 && j != 9){
+                    if(lattice_a[i][j][k] == lattice_b[i+1][j+1][k]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+                else{
+                    if(lattice_a[i][j][k] == lattice_b[0][0][k]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+
+                if(j != 9 && k != 9){
+                    if(lattice_a[i][j][k] == lattice_b[i][j+1][k+1]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+                else{
+                    if(lattice_a[i][j][k] == lattice_b[i][0][0]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+
+                if(i != 9 && k != 9){
+                    if(lattice_a[i][j][k] == lattice_b[i+1][j][k+1]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+                else{
+                    if(lattice_a[i][j][k] == lattice_b[0][j][0]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+
+                if(i != 9 && j != 9 && k != 9){
+                    if(lattice_a[i][j][k] == lattice_b[i+1][j+1][k+1]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+                else{
+                    if(lattice_a[i][j][k] == lattice_b[0][0][0]){
+                        if(lattice_a[i][j][k] == 0){
+                            Naa += 1;
+                        }
+                        else{
+                            Nbb += 1;
+                        }
+                    }
+                    else{
+                        Nab += 1;
+                    }
+                }
+            }
+        }
+    }
+
+    printf("Naa: %d, Nbb: %d, Nab: %d\n", Naa, Nbb, Nab);
+
+    double E_start = Naa * Ecucu + Nbb * Ezizi + Nab * Ecuzi; // Initial energy
+    double E_current = E_start; // Set the current energy to the initial
+
+    /* Monte Carlo with no_of_iterations number of steps */
+    for(int l = 0; l < no_of_iterations; ++l){
+    
+        const gsl_rng_type * T;
+        gsl_rng * r;
+
+        gsl_rng_env_setup();
+
+        T = gsl_rng_default;
+        r = gsl_rng_alloc(T);
+
+        int seed = 42;
+        gsl_rng_set(r, seed);
+
+        // Get random index of atom in lattice_a to swap with neighbour from lattice_b
+        int x_index = 9 * gsl_rng_uniform(r);
+        int y_index = 9 * gsl_rng_uniform(r);
+        int z_index = 9 * gsl_rng_uniform(r);
+
+        printf("x index: %d\n", x_index);
+
+        // Get which neighbour in lattice_b to swap with the lattice_a atom (based on the position of the lattice_a atom)
+        int which_NN_in_b_x = x_index;
+        int which_NN_in_b_y = y_index;
+        int which_NN_in_b_z = z_index;
+        if(gsl_rng_uniform(r) > 0.5){
+            which_NN_in_b_x = x_index + 1;
+        }
+        if(gsl_rng_uniform(r) > 0.5){
+            which_NN_in_b_y = z_index + 1;
+        }
+        if(gsl_rng_uniform(r) > 0.5){
+            which_NN_in_b_z = z_index + 1;
+        }
+
+        
+
+        // Value from lattice_b to put in lattice_a
+        int to_a = lattice_b[which_NN_in_b_x][which_NN_in_b_y][which_NN_in_b_z];
+        // Replace position in the proposed lattice_b with atom from lattice_a
+        lattice_b_prop[which_NN_in_b_x][which_NN_in_b_y][which_NN_in_b_z] = lattice_a[x_index][y_index][z_index];
+        // Insert value from lattice_b in the proposed lattice_a
+        lattice_a_prop[x_index][y_index][z_index] = to_a;
+
+        int Naa_MC = 0; // Number of Cu-Cu bindings 
+        int Nbb_MC = 0; // Number of Zi-Zi bindings
+        int Nab_MC = 0; // Number of Cu-Zi bindings
+
+        // Check number of nearest neighbour of each atom type
+        for(int i = 0; i < 10; ++i){
+            for(int j = 0; j < 10; ++j){
+                for(int k = 0; k < 10; ++k){
+                    if(lattice_a_prop[i][j][k] == lattice_b_prop[i][j][k]){
+                        if(lattice_a_prop[i][j][k] == 0){
+                            Naa_MC += 1;
+                        }
+                        else{
+                            Nbb_MC += 1;
+                        }
+                    }
+                    else{
+                        Nab_MC += 1;
+                    }
+
+                    if(i != 9){
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i+1][j][k]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                    else{
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[0][j][k]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+
+                    if(j != 9){
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i][j+1][k]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                    else{
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i][0][k]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+
+                    if(k != 9){
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i][j][k+1]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                    else{
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i][j][0]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+
+                    if(i != 9 && j != 9){
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i+1][j+1][k]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                    else{
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[0][0][k]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+
+                    if(j != 9 && k != 9){
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i][j+1][k+1]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                    else{
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i][0][0]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+
+                    if(i != 9 && k != 9){
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i+1][j][k+1]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                    else{
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[0][j][0]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+
+                    if(i != 9 && j != 9 && k != 9){
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[i+1][j+1][k+1]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                    else{
+                        if(lattice_a_prop[i][j][k] == lattice_b_prop[0][0][0]){
+                            if(lattice_a_prop[i][j][k] == 0){
+                                Naa_MC += 1;
+                            }
+                            else{
+                                Nbb_MC += 1;
+                            }
+                        }
+                        else{
+                            Nab_MC += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        double E_prop = Naa_MC * Ecucu + Nbb_MC * Ezizi + Nab_MC * Ecuzi; // Energy with the proposed lattices
+        printf("Naa MC: %d, Nbb MC: %d, Nab MC: %d\n", Naa_MC, Nbb_MC, Nab_MC);
+
+        double delta_E = E_prop - E_current; // Energy difference
+        
+        double condition = exp(-delta_E / (kB*temp)); // Condition to except new energy and lattice configuration
+
+        /* If condition > rand uniform number, update current energy and set the a and b lattices equal to the proposed ones*/
+        if(condition >= gsl_rng_uniform(r)){
+            E_current = E_prop;
+
+            for(int i = 0; i < 10; ++i){
+                for(int j = 0; j < 10; ++j){
+                    for(int k = 0; k < 10; ++k){
+                        lattice_a[i][j][k] = lattice_a_prop[i][j][k];
+                        lattice_b[i][j][k] = lattice_b_prop[i][j][k];
+                    }
+                }
+            }
+        }
+
+    }
+
+
     return 0;
+
 }	
