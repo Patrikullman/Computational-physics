@@ -60,9 +60,12 @@ phi = np.delete(phi, 0)
 r = np.delete(r, 0)
 #print(phi)
 
-integral = np.trapz(phi)
+
+integral = np.trapz(4*np.pi*r**2*phi**2, r)
 #print(integral)
-phi = phi / integral
+#summa = np.sum(phi)
+phi = phi / np.sqrt(integral)
+#print(sum(phi))
 
 
 # The normalized hydrogen ground state wavefunction
@@ -70,12 +73,11 @@ def psi(r):
     return 2*np.exp(-r)/(2*np.sqrt(np.pi))    
 
 psi_hydrogen = psi(r)
-
-plt.plot(r, psi_hydrogen, 'r--')
-
-plt.plot(r, phi)
-
-#print(psi_hydrogen)
+plt.plot(r, phi, label = 'Solution of Kohn-Sham')
+plt.plot(r, psi_hydrogen, 'r--', label = 'Wavefunction of hydrogen ground state')
+plt.xlabel('Radius (atomic units)', fontsize = 12)
+plt.ylabel('$\phi$', fontsize = 12)
+plt.legend(loc = 1, fontsize = 12)
 plt.show()
 
 
