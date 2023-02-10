@@ -9,7 +9,7 @@ distances = [] #np.array([])
 for i in range(1000,14000):   #i think we need to remove the first time frames since we need to pick frames after equilibration.
     distances = np.append(distances,atoms[i].get_distances(72,atoms[i].get_atomic_numbers()==8,mic=True))
 
-histogram = np.histogram(distances,bins=1000)
+histogram = np.histogram(distances,bins=300) #note that bins seems to scale better now. increasing bin size converges the integral to coordination nr 5.
 
 V = atoms[0].get_volume()  #cell volume, this is an ase function. 
 N = 24 #oxygen molecules
