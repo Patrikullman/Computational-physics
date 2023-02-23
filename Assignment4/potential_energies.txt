@@ -1,0 +1,3 @@
+Au potential energy: -78.9331 eV
+Pt potential energy: -162.4006 eV
+Rh potential energy: -183.1558 eV

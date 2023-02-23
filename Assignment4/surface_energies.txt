@@ -1,0 +1,3 @@
+Au surface energy: 0.0198 eV
+Pt surface energy: 0.0396 eV
+Rh surface energy: 0.0511 eV
