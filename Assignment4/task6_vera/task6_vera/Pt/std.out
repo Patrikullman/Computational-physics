@@ -1,0 +1,152 @@
+      Step     Time          Energy         fmax
+BFGS:    0 12:54:12     -179.630033        1.2176
+BFGS:    1 13:03:00     -179.663801        1.6907
+BFGS:    2 13:13:24     -179.916854        3.4832
+BFGS:    3 13:26:18     -180.575892        3.7175
+BFGS:    4 13:40:19     -179.840927       12.7476
+BFGS:    5 13:53:54     -180.703258        2.2145
+BFGS:    6 14:03:30     -180.759171        1.4876
+BFGS:    7 14:15:51     -180.836731        1.3786
+BFGS:    8 14:25:17     -180.861681        0.7657
+BFGS:    9 14:35:01     -180.899736        0.3933
+BFGS:   10 14:45:18     -180.921117        0.3832
+BFGS:   11 14:54:42     -180.940696        0.4720
+BFGS:   12 15:03:57     -180.962704        0.3384
+BFGS:   13 15:13:14     -180.973102        0.3852
+BFGS:   14 15:21:04     -180.978596        0.3572
+BFGS:   15 15:28:50     -180.984121        0.2101
+BFGS:   16 15:36:53     -180.991515        0.2302
+BFGS:   17 15:44:41     -180.996951        0.2042
+BFGS:   18 15:52:28     -181.000417        0.2163
+BFGS:   19 16:01:42     -181.004557        0.2031
+BFGS:   20 16:09:39     -181.006738        0.1470
+BFGS:   21 16:15:59     -181.008924        0.1218
+BFGS:   22 16:22:20     -181.010764        0.0641
+      Step     Time          Energy         fmax
+BFGS:    0 16:37:35     -168.951968        3.0751
+BFGS:    1 16:47:07     -169.184691        2.3591
+BFGS:    2 16:59:02     -169.165832        4.5863
+BFGS:    3 17:10:59     -169.372148        1.1033
+BFGS:    4 17:18:36     -169.406950        0.3931
+BFGS:    5 17:27:11     -169.423786        0.4281
+BFGS:    6 17:34:52     -169.437939        0.5487
+BFGS:    7 17:43:44     -169.456440        0.5146
+BFGS:    8 17:52:50     -169.468051        0.3633
+BFGS:    9 18:00:31     -169.476326        0.3304
+BFGS:   10 18:08:41     -169.491744        0.5527
+BFGS:   11 18:20:42     -169.512067        1.7275
+BFGS:   12 18:30:50     -169.536541        1.2086
+BFGS:   13 18:39:01     -169.543289        0.9860
+BFGS:   14 18:47:10     -169.555148        0.9945
+BFGS:   15 18:57:50     -169.609499        1.2436
+BFGS:   16 19:08:53     -169.667409        1.3315
+BFGS:   17 19:18:58     -169.713836        1.3274
+BFGS:   18 19:28:33     -169.847444        1.2727
+BFGS:   19 19:40:01     -170.055125        1.3645
+BFGS:   20 19:49:16     -170.172576        1.0925
+BFGS:   21 20:00:17     -170.284949        1.1331
+BFGS:   22 20:10:19     -170.340822        1.2349
+BFGS:   23 20:19:55     -170.406284        1.0572
+BFGS:   24 20:31:25     -170.502163        0.6363
+BFGS:   25 20:41:01     -170.531983        0.4340
+BFGS:   26 20:49:39     -170.557026        0.4099
+BFGS:   27 20:58:17     -170.581227        0.4042
+BFGS:   28 21:07:22     -170.600827        0.3839
+BFGS:   29 21:15:32     -170.612671        0.3437
+BFGS:   30 21:24:41     -170.622025        0.3057
+BFGS:   31 21:31:53     -170.628550        0.3063
+BFGS:   32 21:40:03     -170.640768        0.1997
+BFGS:   33 21:46:46     -170.643976        0.1418
+BFGS:   34 21:53:00     -170.645866        0.1203
+BFGS:   35 22:00:40     -170.648340        0.1473
+BFGS:   36 22:06:55     -170.650371        0.0904
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV
+Adsorption energy of O atom: -12.624270610379938 eV
+Adsorption energy of CO molecule: -25.71517405809942 eV
+Activation energy E_activation 11.721833400543808 eV

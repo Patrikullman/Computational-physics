@@ -1,0 +1,272 @@
+      Step     Time          Energy         fmax
+BFGS:    0 12:54:19     -183.341354        2.4828
+BFGS:    1 12:55:23     -183.636445        2.8609
+BFGS:    2 12:56:54     -185.047533        6.7841
+BFGS:    3 12:58:03     -185.344730        4.4432
+BFGS:    4 12:59:26     -185.502998        4.1640
+BFGS:    5 13:00:40     -185.584930        1.2133
+BFGS:    6 13:01:47     -185.610178        0.9846
+BFGS:    7 13:02:48     -185.706879        0.7419
+BFGS:    8 13:04:06     -186.183036        1.3714
+BFGS:    9 13:05:04     -186.319196        1.4654
+BFGS:   10 13:06:19     -186.799876        4.3854
+BFGS:   11 13:07:30     -187.038055        3.0774
+BFGS:   12 13:08:33     -187.282934        1.0386
+BFGS:   13 13:09:50     -187.771926        2.8526
+BFGS:   14 13:10:52     -188.018119        3.1266
+BFGS:   15 13:12:02     -188.408525        2.2341
+BFGS:   16 13:13:09     -188.715248        1.3461
+BFGS:   17 13:14:14     -189.014612        2.9361
+BFGS:   18 13:15:18     -189.356140        3.5122
+BFGS:   19 13:16:18     -189.564255        1.1609
+BFGS:   20 13:17:18     -189.764479        0.7500
+BFGS:   21 13:18:18     -189.885615        1.8987
+BFGS:   22 13:19:15     -189.983437        1.9807
+BFGS:   23 13:20:12     -190.072673        0.9277
+BFGS:   24 13:21:09     -190.134144        0.5297
+BFGS:   25 13:22:06     -190.189213        1.2027
+BFGS:   26 13:23:03     -190.243715        1.1179
+BFGS:   27 13:23:58     -190.288634        0.4746
+BFGS:   28 13:25:00     -190.340423        0.5685
+BFGS:   29 13:26:10     -190.395925        1.2217
+BFGS:   30 13:27:22     -190.472840        1.5446
+BFGS:   31 13:28:31     -190.570424        1.0855
+BFGS:   32 13:29:29     -190.665225        0.6839
+BFGS:   33 13:30:28     -190.774282        1.4790
+BFGS:   34 13:31:27     -190.825801        1.5220
+BFGS:   35 13:32:23     -190.884210        0.6773
+BFGS:   36 13:33:22     -190.944297        0.6507
+BFGS:   37 13:34:14     -190.978436        1.0878
+BFGS:   38 13:35:12     -191.036282        1.0813
+BFGS:   39 13:36:11     -191.073856        0.5175
+BFGS:   40 13:37:12     -191.112114        0.4910
+BFGS:   41 13:38:17     -191.153152        1.2086
+BFGS:   42 13:39:09     -191.191131        1.2449
+BFGS:   43 13:40:05     -191.236122        0.5776
+BFGS:   44 13:40:54     -191.266022        0.3883
+BFGS:   45 13:41:50     -191.314915        0.9903
+BFGS:   46 13:42:48     -191.355994        1.1402
+BFGS:   47 13:43:48     -191.399691        0.8223
+BFGS:   48 13:44:48     -191.447422        0.5040
+BFGS:   49 13:45:47     -191.497081        1.2630
+BFGS:   50 13:46:45     -191.571356        1.9230
+BFGS:   51 13:47:56     -191.682616        1.9484
+BFGS:   52 13:48:51     -191.745326        0.9179
+BFGS:   53 13:49:50     -191.829588        0.7252
+BFGS:   54 13:50:42     -191.868355        1.3270
+BFGS:   55 13:51:39     -191.904246        1.0721
+BFGS:   56 13:52:35     -191.942266        0.4727
+BFGS:   57 13:53:32     -191.968710        0.6007
+BFGS:   58 13:54:27     -192.001790        0.7655
+BFGS:   59 13:55:28     -192.038035        0.5199
+BFGS:   60 13:56:26     -192.070295        1.1022
+BFGS:   61 13:57:31     -192.106786        0.5102
+BFGS:   62 13:58:31     -192.149491        0.6819
+BFGS:   63 13:59:25     -192.170944        0.2223
+BFGS:   64 14:00:15     -192.186713        0.2666
+BFGS:   65 14:01:01     -192.201370        0.2769
+BFGS:   66 14:01:48     -192.219151        0.2262
+BFGS:   67 14:02:33     -192.227139        0.2224
+BFGS:   68 14:03:18     -192.234886        0.2644
+BFGS:   69 14:04:09     -192.243539        0.2343
+BFGS:   70 14:04:54     -192.251298        0.1793
+BFGS:   71 14:05:48     -192.259319        0.1896
+BFGS:   72 14:06:38     -192.265130        0.2114
+BFGS:   73 14:07:26     -192.274660        0.1967
+BFGS:   74 14:08:16     -192.281105        0.1722
+BFGS:   75 14:08:56     -192.284186        0.1393
+BFGS:   76 14:09:43     -192.287058        0.1224
+BFGS:   77 14:10:28     -192.290803        0.1507
+BFGS:   78 14:11:15     -192.295054        0.1062
+BFGS:   79 14:12:07     -192.299757        0.1332
+BFGS:   80 14:12:51     -192.303725        0.1736
+BFGS:   81 14:13:35     -192.307084        0.2011
+BFGS:   82 14:14:16     -192.310387        0.1278
+BFGS:   83 14:14:59     -192.312207        0.1300
+BFGS:   84 14:15:44     -192.314636        0.1280
+BFGS:   85 14:16:33     -192.318951        0.1684
+BFGS:   86 14:17:27     -192.323597        0.1639
+BFGS:   87 14:18:28     -192.323645        0.2038
+BFGS:   88 14:19:22     -192.330041        0.1486
+BFGS:   89 14:19:55     -192.333623        0.1130
+BFGS:   90 14:20:46     -192.342588        0.1271
+BFGS:   91 14:21:39     -192.347489        0.1605
+BFGS:   92 14:22:28     -192.350280        0.1845
+BFGS:   93 14:23:08     -192.354578        0.1561
+BFGS:   94 14:23:51     -192.360834        0.1091
+BFGS:   95 14:24:34     -192.364070        0.1319
+BFGS:   96 14:25:21     -192.368994        0.1229
+BFGS:   97 14:26:06     -192.373977        0.0922
+      Step     Time          Energy         fmax
+BFGS:    0 14:27:26     -171.883044        3.7595
+BFGS:    1 14:28:28     -172.332268        3.7198
+BFGS:    2 14:29:53     -173.969505        2.9181
+BFGS:    3 14:31:21     -174.348914        5.8342
+BFGS:    4 14:32:37     -174.647725        1.5381
+BFGS:    5 14:33:35     -174.860869        1.7023
+BFGS:    6 14:34:55     -175.611072        1.8199
+BFGS:    7 14:35:51     -175.824078        1.3754
+BFGS:    8 14:37:04     -176.283635        1.1175
+BFGS:    9 14:38:10     -176.557050        0.9327
+BFGS:   10 14:39:21     -176.787746        1.0867
+BFGS:   11 14:40:33     -177.040313        1.1027
+BFGS:   12 14:41:30     -177.244257        0.8419
+BFGS:   13 14:42:35     -177.635764        1.1292
+BFGS:   14 14:43:41     -177.878451        1.1874
+BFGS:   15 14:44:49     -178.244711        1.0555
+BFGS:   16 14:45:48     -178.551583        1.0097
+BFGS:   17 14:46:59     -178.855496        1.0895
+BFGS:   18 14:48:07     -178.984539        0.8917
+BFGS:   19 14:49:08     -179.129282        0.7762
+BFGS:   20 14:50:13     -179.287378        0.7252
+BFGS:   21 14:51:12     -179.443750        0.8340
+BFGS:   22 14:52:10     -179.601924        0.9160
+BFGS:   23 14:53:16     -179.875196        1.3551
+BFGS:   24 14:54:18     -180.102760        1.0594
+BFGS:   25 14:55:28     -180.374117        1.0669
+BFGS:   26 14:56:29     -180.502974        1.0199
+BFGS:   27 14:57:32     -180.672216        0.8271
+BFGS:   28 14:58:43     -180.869421        0.6717
+BFGS:   29 14:59:42     -180.975027        0.5319
+BFGS:   30 15:00:36     -181.080028        0.5454
+BFGS:   31 15:01:28     -181.147958        0.5513
+BFGS:   32 15:02:23     -181.199308        0.3862
+BFGS:   33 15:03:19     -181.242873        0.4546
+BFGS:   34 15:04:20     -181.281559        0.4481
+BFGS:   35 15:05:16     -181.316774        0.4015
+BFGS:   36 15:06:16     -181.354371        0.3230
+BFGS:   37 15:07:12     -181.377646        0.3334
+BFGS:   38 15:08:04     -181.399451        0.2750
+BFGS:   39 15:09:12     -181.442304        0.3926
+BFGS:   40 15:10:09     -181.470874        0.4222
+BFGS:   41 15:11:13     -181.508440        0.3931
+BFGS:   42 15:12:13     -181.544697        0.4131
+BFGS:   43 15:13:20     -181.578479        0.4639
+BFGS:   44 15:14:18     -181.615398        0.4239
+BFGS:   45 15:15:15     -181.670348        0.4671
+BFGS:   46 15:16:18     -181.729883        0.4999
+BFGS:   47 15:17:15     -181.786298        0.6217
+BFGS:   48 15:18:14     -181.837819        0.5517
+BFGS:   49 15:19:15     -181.911797        0.4822
+BFGS:   50 15:20:09     -181.954449        0.4254
+BFGS:   51 15:21:07     -182.006065        0.3264
+BFGS:   52 15:22:01     -182.058151        0.3891
+BFGS:   53 15:22:58     -182.122954        0.3636
+BFGS:   54 15:23:50     -182.165544        0.3255
+BFGS:   55 15:24:50     -182.202809        0.2992
+BFGS:   56 15:25:41     -182.236468        0.2964
+BFGS:   57 15:26:37     -182.278843        0.3423
+BFGS:   58 15:27:28     -182.307270        0.3054
+BFGS:   59 15:28:22     -182.331973        0.2698
+BFGS:   60 15:29:11     -182.348891        0.2806
+BFGS:   61 15:30:03     -182.374653        0.3525
+BFGS:   62 15:30:55     -182.396101        0.4149
+BFGS:   63 15:31:45     -182.419455        0.3302
+BFGS:   64 15:32:34     -182.443809        0.2939
+BFGS:   65 15:33:22     -182.465576        0.3019
+BFGS:   66 15:34:11     -182.478509        0.2469
+BFGS:   67 15:35:00     -182.490487        0.2002
+BFGS:   68 15:35:51     -182.502979        0.2024
+BFGS:   69 15:36:44     -182.514155        0.2236
+BFGS:   70 15:37:38     -182.525608        0.2505
+BFGS:   71 15:38:28     -182.536681        0.2599
+BFGS:   72 15:39:18     -182.547815        0.2658
+BFGS:   73 15:40:09     -182.558275        0.2169
+BFGS:   74 15:40:52     -182.566142        0.2145
+BFGS:   75 15:41:40     -182.571222        0.1930
+BFGS:   76 15:42:24     -182.576284        0.1892
+BFGS:   77 15:43:09     -182.583940        0.1599
+BFGS:   78 15:43:53     -182.590269        0.1373
+BFGS:   79 15:44:34     -182.594179        0.1339
+BFGS:   80 15:45:16     -182.596854        0.1051
+BFGS:   81 15:45:53     -182.598592        0.0932
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
+Adsorption energy of O atom: -3.817291788036215 eV
+Adsorption energy of CO molecule: -16.323155794433063 eV
+Activation energy E_activation 6.262134274740783 eV
